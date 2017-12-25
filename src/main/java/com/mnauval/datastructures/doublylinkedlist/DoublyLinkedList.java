@@ -114,8 +114,84 @@ public class DoublyLinkedList<E> {
         this.size += 1;
     }
 
-    public E remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeFirst() {
+        Node<E> nextOfHead = head.getNext();
+        nextOfHead.setPrev(null);
+        head = nextOfHead;
+        size--;
+    }
+
+    public E get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == 0) {
+            return head.getItem();
+        }
+        if (index == size - 1) {
+            return tail.getItem();
+        }
+        int currentIndex = 0;
+        Node<E> current = head;
+        while (currentIndex < index) {
+            currentIndex++;
+            current = current.getNext();
+        }
+        return current.getItem();
+    }
+
+    public void removeLast() {
+        Node<E> prevOfTail = tail.getPrev();
+        prevOfTail.setNext(null);
+        size--;
+    }
+
+    public void removeAt(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == 0) {
+            removeFirst();
+            return;
+        }
+        if (index == size - 1) {
+            removeLast();
+            return;
+        }
+        int currentIndex = 0;
+        Node<E> current = head;
+        while (currentIndex < index) {
+            currentIndex++;
+            current = current.getNext();
+        }
+
+        Node<E> prevOfCurrent = current.getPrev();
+        Node<E> nextOfCurrent = current.getNext();
+        if (prevOfCurrent != null) {
+            prevOfCurrent.setNext(nextOfCurrent);
+        }
+        if (nextOfCurrent != null) {
+            nextOfCurrent.setPrev(prevOfCurrent);
+        }
+        size--;
+    }
+
+    public void remove(E item) {
+        Node<E> current = head;
+        while (current != null) {
+            if (current.getItem().equals(item)) {
+                Node<E> prevOfCurrent = current.getPrev();
+                Node<E> nextOfCurrent = current.getNext();
+                if (prevOfCurrent != null) {
+                    prevOfCurrent.setNext(nextOfCurrent);
+                }
+                if (nextOfCurrent != null) {
+                    nextOfCurrent.setPrev(prevOfCurrent);
+                }
+                size--;
+            }
+            current = current.getNext();
+        }
     }
 
     private class DoublyLinkedListIterator implements ListIterator<E> {
